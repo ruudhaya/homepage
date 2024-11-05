@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "HomePage",
+    "version": "1.0",
+    "description": "A custom new tab page with favorite links",
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    },
+    "permissions": [
+        "tabs"
+    ]
+}
