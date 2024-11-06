@@ -33,8 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     linkElement.innerHTML = `
                         <a href="${link.url}" target="_blank">${link.name}</a>
                         <div class="link-buttons">
-                            <button class="edit-button" data-group="${group}" data-index="${index}">Edit</button>
-                            <button class="delete-button" data-group="${group}" data-index="${index}">Delete</button>
+                            <button class="edit-button" data-group="${group}" data-index="${index}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-button" data-group="${group}" data-index="${index}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
                     `;
                     contentDiv.appendChild(linkElement);
@@ -51,19 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 content.style.display = content.style.display === 'block' ? 'none' : 'block';
             });
         });
+
         // Add event listeners for edit and delete buttons
         document.querySelectorAll('.edit-button').forEach(button => {
             button.addEventListener('click', (e) => {
-                const group = e.target.dataset.group;
-                const index = e.target.dataset.index;
+                const group = e.target.closest('button').dataset.group;
+                const index = e.target.closest('button').dataset.index;
                 editLink(group, index);
             });
         });
 
         document.querySelectorAll('.delete-button').forEach(button => {
             button.addEventListener('click', (e) => {
-                const group = e.target.dataset.group;
-                const index = e.target.dataset.index;
+                const group = e.target.closest('button').dataset.group;
+                const index = e.target.closest('button').dataset.index;
                 deleteLink(group, index);
             });
         });
