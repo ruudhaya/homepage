@@ -1,6 +1,7 @@
 import { sampleData } from './sampleData.js';
+import { openDatabase, saveImage, loadImage, deleteImage } from './indexedDB.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const linksDiv = document.getElementById('links');
     const linkForm = document.getElementById('linkForm');
     const groupName = document.getElementById('groupName');
@@ -15,11 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmationDialog = document.getElementById('confirmationDialog');
     const confirmDeleteButton = document.getElementById('confirmDelete');
     const cancelDeleteButton = document.getElementById('cancelDelete');
+    const imageImportButton = document.getElementById('imageImport');
+    const resetBackgroundButton = document.getElementById('resetBackground');
+    const fileInput = document.getElementById('fileInput');
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
     let openGroup = '';
     let groupToDelete = '';
+    let db;
+
+    // Open IndexedDB
+    try {
+        db = await openDatabase();
+    } catch (error) {
+        console.error('Failed to open IndexedDB:', error);
+    }
 
     // Load links from localStorage
     const loadLinks = () => {
@@ -199,6 +211,55 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmationDialog.style.display = 'none';
     });
 
+    // Handle image import
+    imageImportButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const imageUrl = event.target.result;
+                document.body.style.backgroundImage = `url(${imageUrl})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                try {
+                    await saveImage(db, imageUrl); // Save image to IndexedDB
+                } catch (error) {
+                    console.error('Failed to save image to IndexedDB:', error);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle reset background
+    resetBackgroundButton.addEventListener('click', async () => {
+        document.body.style.backgroundImage = '';
+        try {
+            await deleteImage(db); // Remove image from IndexedDB
+        } catch (error) {
+            console.error('Failed to delete image from IndexedDB:', error);
+        }
+    });
+
+   // Load background image from IndexedDB
+   const loadBackgroundImage = async () => {
+    try {
+        const savedBackgroundImage = await loadImage(db);
+        if (savedBackgroundImage) {
+            document.body.style.backgroundImage = `url(${savedBackgroundImage})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        }
+    } catch (error) {
+        console.error('Failed to load image from IndexedDB:', error);
+    }
+};
+
     // Initial load
     loadLinks();
+    loadBackgroundImage();
 });

@@ -10,6 +10,8 @@
 <body>
     <h1>Favorite Links</h1>
     <div id="links" class="accordion"></div>
+    <button id="resetBackground"><i class="fas fa-undo"></i></button>
+    <button id="imageImport"><i class="fas fa-image"></i></button>
     <button class="floating-button" id="openPopup">+</button>
     <div class="popup" id="popup">
         <div class="popup-content">
@@ -30,6 +32,8 @@
         <button class="confirm" id="confirmDelete">Yes</button>
         <button class="cancel" id="cancelDelete">No</button>
     </div>
+
+    <input type="file" id="fileInput" accept="image/png, image/jpeg" style="display: none;">
 
     <script type="module" src="sampleData.js"></script>
     <script type="module" src="script.js"></script>
