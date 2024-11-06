@@ -1,8 +1,9 @@
 [*] Edit, form button should be 'save' instead of 'Add Link'
-Delete, Save - On successful completion, Accordion should remain be open
+[*] Delete, Save - On successful completion, Accordion should remain be open
 Import and Export of the link contents
 Background image for the Home Page
 Alignment of the Accordion should be left aligned and scrollable with maximum height of the window other than the Footer
 Add Link - Group name should be a dropdown with already available group names, and an option to add a new group
 Edit - On editing the group name, link should be moved from one to another group
 Delete Group - Group should be deleted with a confirmation dialog
+Keep all the opened Groups remain open on action completion

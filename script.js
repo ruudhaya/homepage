@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
+    let openGroup = '';
 
     // Load links from localStorage
     const loadLinks = () => {
@@ -45,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     contentDiv.appendChild(linkElement);
                 });
                 linksDiv.appendChild(groupElement);
+                
+                // Keep the accordion open if it was open before
+                if (group === openGroup) {
+                    contentDiv.classList.add('open');
+                    contentDiv.style.display = 'block';
+                }
             }
         }
 
@@ -53,7 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
         headers.forEach(header => {
             header.addEventListener('click', () => {
                 const content = header.nextElementSibling;
-                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                content.classList.toggle('open');
+                content.style.display = content.classList.contains('open') ? 'block' : 'none';
+                openGroup = content.classList.contains('open') ? header.textContent : '';
             });
         });
 
@@ -102,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
         linkURL.value = '';
         popup.style.display = 'none';
         submitBtn.value = 'Add Link'; // Reset button text
+
+        // Keep the accordion open after save
+        openGroup = groupName.value;
     });
 
     // Load sample data on button click
@@ -149,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
         groups[group].splice(index, 1);
         localStorage.setItem('favoriteLinks', JSON.stringify(groups));
+        openGroup = group; // Keep the accordion open after delete
         loadLinks();
     };
     // Initial load

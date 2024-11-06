@@ -30,6 +30,9 @@ body {
     display: none;
     padding: 15px;
 }
+.accordion-content.open {
+    display: block;
+}
 .link {
     margin: 10px 0;
     font-size: 18px;
