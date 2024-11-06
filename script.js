@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const openPopupButton = document.getElementById('openPopup');
     const closePopupButton = document.getElementById('closePopup');
     const popup = document.getElementById('popup');
+    const submitBtn = document.getElementById('submitBtn');
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         linkName.value = '';
         linkURL.value = '';
         popup.style.display = 'none';
+        submitBtn.value = 'Add Link'; // Reset button text
     });
 
     // Load sample data on button click
@@ -111,17 +113,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Open popup
     openPopupButton.addEventListener('click', () => {
         popup.style.display = 'flex';
+        submitBtn.value = 'Add Link'; // Set button text for adding
     });
 
     // Close popup
     closePopupButton.addEventListener('click', () => {
         popup.style.display = 'none';
+        submitBtn.value = 'Add Link'; // Reset button text
     });
 
     // Close popup on Esc key press
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             popup.style.display = 'none';
+            submitBtn.value = 'Add Link'; // Reset button text
         }
     });
 
@@ -136,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editGroup = group;
         editIndex = index;
         popup.style.display = 'flex';
+        submitBtn.value = 'Save'; // Change button text to Save
     };
 
     // Delete link
