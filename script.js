@@ -11,10 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const closePopupButton = document.getElementById('closePopup');
     const popup = document.getElementById('popup');
     const submitBtn = document.getElementById('submitBtn');
+    const overlay = document.getElementById('overlay');
+    const confirmationDialog = document.getElementById('confirmationDialog');
+    const confirmDeleteButton = document.getElementById('confirmDelete');
+    const cancelDeleteButton = document.getElementById('cancelDelete');
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
     let openGroup = '';
+    let groupToDelete = '';
 
     // Load links from localStorage
     const loadLinks = () => {
@@ -25,7 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const groupElement = document.createElement('div');
                 groupElement.className = 'accordion-item';
                 groupElement.innerHTML = `
-                    <div class="accordion-header">${group}</div>
+                    <div class="accordion-header">
+                        ${group}
+                        <i class="fas fa-trash-alt delete-group" data-group="${group}"></i>
+                    </div>
                     <div class="accordion-content"></div>
                 `;
                 const contentDiv = groupElement.querySelector('.accordion-content');
@@ -80,6 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const group = e.target.closest('button').dataset.group;
                 const index = e.target.closest('button').dataset.index;
                 deleteLink(group, index);
+            });
+        });
+
+        // Add event listeners for delete group icons
+        document.querySelectorAll('.delete-group').forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent accordion toggle
+                groupToDelete = e.target.dataset.group;
+                overlay.style.display = 'block';
+                confirmationDialog.style.display = 'block';
             });
         });
     };
@@ -164,6 +182,23 @@ document.addEventListener('DOMContentLoaded', () => {
         openGroup = group; // Keep the accordion open after delete
         loadLinks();
     };
+
+    // Confirm delete group
+    confirmDeleteButton.addEventListener('click', () => {
+        const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
+        delete groups[groupToDelete];
+        localStorage.setItem('favoriteLinks', JSON.stringify(groups));
+        overlay.style.display = 'none';
+        confirmationDialog.style.display = 'none';
+        loadLinks();
+    });
+
+    // Cancel delete group
+    cancelDeleteButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        confirmationDialog.style.display = 'none';
+    });
+
     // Initial load
     loadLinks();
 });
