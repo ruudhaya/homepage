@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const openPopupButton = document.getElementById('openPopup');
     const closePopupButton = document.getElementById('closePopup');
     const popup = document.getElementById('popup');
+    let editMode = false;
+    let editGroup = '';
+    let editIndex = -1;
 
     // Load links from localStorage
     const loadLinks = () => {
@@ -24,10 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="accordion-content"></div>
                 `;
                 const contentDiv = groupElement.querySelector('.accordion-content');
-                groups[group].forEach(link => {
+                groups[group].forEach((link, index) => {
                     const linkElement = document.createElement('div');
                     linkElement.className = 'link';
-                    linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                    linkElement.innerHTML = `
+                        <a href="${link.url}" target="_blank">${link.name}</a>
+                        <div class="link-buttons">
+                            <button class="edit-button" data-group="${group}" data-index="${index}">Edit</button>
+                            <button class="delete-button" data-group="${group}" data-index="${index}">Delete</button>
+                        </div>
+                    `;
                     contentDiv.appendChild(linkElement);
                 });
                 linksDiv.appendChild(groupElement);
@@ -42,6 +51,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 content.style.display = content.style.display === 'block' ? 'none' : 'block';
             });
         });
+        // Add event listeners for edit and delete buttons
+        document.querySelectorAll('.edit-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const group = e.target.dataset.group;
+                const index = e.target.dataset.index;
+                editLink(group, index);
+            });
+        });
+
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const group = e.target.dataset.group;
+                const index = e.target.dataset.index;
+                deleteLink(group, index);
+            });
+        });
     };
 
     // Save a new link to localStorage
@@ -50,7 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!Array.isArray(groups[group])) {
             groups[group] = [];
         }
-        groups[group].push({ name, url });
+        if (editMode) {
+            groups[editGroup][editIndex] = { name, url };
+            editMode = false;
+            editGroup = '';
+            editIndex = -1;
+        } else {
+            groups[group].push({ name, url });
+        }
         localStorage.setItem('favoriteLinks', JSON.stringify(groups));
         loadLinks();
     };
@@ -88,6 +120,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Edit link
+    const editLink = (group, index) => {
+        const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
+        const link = groups[group][index];
+        groupName.value = group;
+        linkName.value = link.name;
+        linkURL.value = link.url;
+        editMode = true;
+        editGroup = group;
+        editIndex = index;
+        popup.style.display = 'flex';
+    };
+
+    // Delete link
+    const deleteLink = (group, index) => {
+        const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
+        groups[group].splice(index, 1);
+        localStorage.setItem('favoriteLinks', JSON.stringify(groups));
+        loadLinks();
+    };
     // Initial load
     loadLinks();
 });
