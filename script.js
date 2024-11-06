@@ -1,3 +1,5 @@
+import { sampleData } from './sampleData.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const linksDiv = document.getElementById('links');
     const linkForm = document.getElementById('linkForm');
@@ -5,26 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkName = document.getElementById('linkName');
     const linkURL = document.getElementById('linkURL');
     const loadSampleButton = document.getElementById('loadSample');
-
-    // Sample data
-    const sampleData = {
-        "Work": [
-            { name: "Google", url: "https://www.google.com" },
-            { name: "GitHub", url: "https://www.github.com" }
-        ],
-        "Social": [
-            { name: "Facebook", url: "https://www.facebook.com" },
-            { name: "Twitter", url: "https://www.twitter.com" }
-        ],
-        "News": [
-            { name: "CNN", url: "https://www.cnn.com" },
-            { name: "BBC", url: "https://www.bbc.com" }
-        ],
-        "Entertainment": [
-            { name: "YouTube", url: "https://www.youtube.com" },
-            { name: "Netflix", url: "https://www.netflix.com" }
-        ]
-    };
+    const openPopupButton = document.getElementById('openPopup');
+    const closePopupButton = document.getElementById('closePopup');
+    const popup = document.getElementById('popup');
 
     // Load links from localStorage
     const loadLinks = () => {
@@ -77,12 +62,30 @@ document.addEventListener('DOMContentLoaded', () => {
         groupName.value = '';
         linkName.value = '';
         linkURL.value = '';
+        popup.style.display = 'none';
     });
 
     // Load sample data on button click
     loadSampleButton.addEventListener('click', () => {
         localStorage.setItem('favoriteLinks', JSON.stringify(sampleData));
         loadLinks();
+    });
+
+    // Open popup
+    openPopupButton.addEventListener('click', () => {
+        popup.style.display = 'flex';
+    });
+
+    // Close popup
+    closePopupButton.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    // Close popup on Esc key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            popup.style.display = 'none';
+        }
     });
 
     // Initial load
