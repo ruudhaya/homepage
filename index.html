@@ -15,9 +15,31 @@
             margin: 0;
             background-color: #f0f0f0;
         }
+        .accordion {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+        .accordion-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        .accordion-header {
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+        .accordion-content {
+            display: none;
+            padding: 15px;
+        }
         .link {
             margin: 10px 0;
-            font-size: 20px;
+            font-size: 18px;
         }
         a {
             text-decoration: none;
@@ -28,26 +50,34 @@
         }
         form {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        input[type="text"] {
-            padding: 5px;
+        input[type="text"], input[type="url"] {
+            padding: 10px;
             font-size: 16px;
+            margin: 5px 0;
+            width: 80%;
+            max-width: 400px;
         }
         input[type="submit"] {
-            padding: 5px 10px;
+            padding: 10px 20px;
             font-size: 16px;
-            margin-left: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <h1>Favorite Links</h1>
-    <div id="links"></div>
+    <div id="links" class="accordion"></div>
     <form id="linkForm">
+        <input type="text" id="groupName" placeholder="Group Name" required>
         <input type="text" id="linkName" placeholder="Link Name" required>
         <input type="url" id="linkURL" placeholder="Link URL" required>
         <input type="submit" value="Add Link">
     </form>
+    <button id="loadSample">Load Sample Data</button>
     <script src="script.js"></script>
 </body>
 </html>
