@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchBar = document.getElementById('searchBar');
     const searchResults = document.getElementById('searchResults');
 
+    let shiftPressCount = 0;
+    let shiftPressTimer;
     let currentFocus = -1;
     let editMode = false;
     let editGroup = '';
@@ -357,6 +359,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Handle keyboard navigation for search results
+    searchBar.addEventListener('keydown', (e) => {
+        const results = searchResults.getElementsByClassName('search-result');
+        if (e.key === 'ArrowDown') {
+            currentFocus++;
+            addActive(results);
+        } else if (e.key === 'ArrowUp') {
+            currentFocus--;
+            addActive(results);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocus > -1) {
+                if (results[currentFocus]) {
+                    results[currentFocus].click();
+                }
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        // Handle Shift key press to open search bar
+        if (e.key === 'Shift') {
+            shiftPressCount++;
+            if (shiftPressCount === 1) {
+                shiftPressTimer = setTimeout(() => {
+                    shiftPressCount = 0;
+                }, 300); // 300ms interval to detect double shift press
+            } else if (shiftPressCount === 2) {
+                clearTimeout(shiftPressTimer);
+                shiftPressCount = 0;
+                // Open search bar
+                searchBar.style.display = 'block';
+                searchBar.focus();
+            }
+        }
+        // Close search bar and results on pressing Esc key
+        if (e.key === 'Escape') {
+            searchBar.style.display = 'none';
+            searchBar.value = ''; // Clear the search text
+            searchResults.style.display = 'none'; // Hide the search results
+        }
+    });
     const renderSearchResults = (results) => {
         searchResults.innerHTML = '';
         currentFocus = -1;
@@ -377,25 +421,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Handle keyboard navigation for search results
-    searchBar.addEventListener('keydown', (e) => {
-        const results = searchResults.getElementsByClassName('search-result');
-        if (e.key === 'ArrowDown') {
-            currentFocus++;
-            addActive(results);
-        } else if (e.key === 'ArrowUp') {
-            currentFocus--;
-            addActive(results);
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (currentFocus > -1) {
-                if (results[currentFocus]) {
-                    results[currentFocus].click();
-                }
-            }
-        }
-    });
-
     const addActive = (results) => {
         if (!results) return false;
         removeActive(results);
@@ -410,14 +435,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Close search bar and results on pressing Esc key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            searchBar.style.display = 'none';
-            searchBar.value = ''; // Clear the search text
-            searchResults.style.display = 'none'; // Hide the search results
-        }
-    });
     // Initial load
     loadLinks();
     loadBackgroundImage();
