@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cancelDeleteButton = document.getElementById('cancelDelete');
     const imageImportButton = document.getElementById('imageImport');
     const resetBackgroundButton = document.getElementById('resetBackground');
+    const exportLinksButton = document.getElementById('exportLinks');
+    const importLinksButton = document.getElementById('importLinks');
+    const importFileInput = document.getElementById('importFileInput');
+    const notification = document.getElementById('notification');
     const fileInput = document.getElementById('fileInput');
     let editMode = false;
     let editGroup = '';
@@ -245,19 +249,79 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-   // Load background image from IndexedDB
-   const loadBackgroundImage = async () => {
-    try {
-        const savedBackgroundImage = await loadImage(db);
-        if (savedBackgroundImage) {
-            document.body.style.backgroundImage = `url(${savedBackgroundImage})`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
+    // Load background image from IndexedDB
+    const loadBackgroundImage = async () => {
+        try {
+            const savedBackgroundImage = await loadImage(db);
+            if (savedBackgroundImage) {
+                document.body.style.backgroundImage = `url(${savedBackgroundImage})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            }
+        } catch (error) {
+            console.error('Failed to load image from IndexedDB:', error);
         }
-    } catch (error) {
-        console.error('Failed to load image from IndexedDB:', error);
-    }
-};
+   };
+    // Export links to JSON file
+    exportLinksButton.addEventListener('click', () => {
+        const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
+        const json = JSON.stringify(groups, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'favorite_links.json';
+        document.body.appendChild(a);
+        a.click();
+        a.addEventListener('click', () => {
+            // Show success notification
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        });
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // Function to show notifications
+    const showNotification = (message) => {
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    };
+
+    importLinksButton.addEventListener('click', () => {
+        console.log('Import button clicked');
+        importFileInput.click();
+    });
+    
+    importFileInput.addEventListener('change', (e) => {
+        console.log('File input change event triggered');
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (typeof importedData === 'object' && importedData !== null) {
+                        localStorage.setItem('favoriteLinks', JSON.stringify(importedData));
+                        loadLinks();
+                        showNotification('Import successful');
+                    } else {
+                        showNotification('File could not be imported');
+                    }
+                } catch (error) {
+                    showNotification('File could not be imported');
+                }
+            };
+            reader.readAsText(file);
+        }
+        // Reset the value of the file input to ensure the change event triggers again
+        importFileInput.value = '';
+    });
 
     // Initial load
     loadLinks();

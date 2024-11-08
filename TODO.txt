@@ -2,11 +2,12 @@
 [*] Delete, Save - On successful completion, Accordion should remain be open
 [*] Delete Group - Group should be deleted with a confirmation dialog
 [*] Background image for the Home Page
-Import and Export of the link contents
+[*] Import and Export of the link contents
+[] Search with double shift key press
+[] Default background images - to show for selection, set them as background
 
 Add Link - Group name should be a dropdown with already available group names, and an option to add a new group
 Edit - On editing the group name, link should be moved from one to another group
-
 Keep all the opened Groups remain open on action completion
 
 Alignment of the Accordion should be left aligned and scrollable with maximum height of the window other than the Footer
