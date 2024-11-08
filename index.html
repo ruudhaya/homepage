@@ -14,10 +14,16 @@
     <h1>Favorite Links</h1>
     <div id="links" class="accordion"></div>
     <button id="resetBackground"><i class="fas fa-undo"></i></button>
-    <button id="imageImport"><i class="fas fa-image"></i></button>
     <button id="exportLinks"><i class="fas fa-file-export"></i></button>
     <button id="importLinks"><i class="fas fa-file-import"></i></button>
     <button class="floating-button" id="openPopup">+</button>
+    <button id="backgroundSelect"><i class="fas fa-image"></i></button>
+    <div id="backgroundOptions">
+        <div class="background-option" data-image="1.jpg"></div>
+        <div class="background-option" data-image="2.jpg"></div>
+        <div class="background-option" data-image="3.jpg"></div>
+        <div class="background-option" id="imageImport"><i class="fas fa-upload"></i></div>
+    </div>
     <div class="popup" id="popup">
         <div class="popup-content">
             <button class="close-popup" id="closePopup">&times;</button>

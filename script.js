@@ -26,7 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchIcon = document.getElementById('searchIcon');
     const searchBar = document.getElementById('searchBar');
     const searchResults = document.getElementById('searchResults');
-
+    const backgroundSelectButton = document.getElementById('backgroundSelect');
+    const backgroundOptions = document.getElementById('backgroundOptions');
+    const backgroundOptionElements = document.querySelectorAll('.background-option');
+    
     let shiftPressCount = 0;
     let shiftPressTimer;
     let currentFocus = -1;
@@ -256,6 +259,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    backgroundSelectButton.addEventListener('click', () => {
+        if (backgroundOptions.style.display === 'none' || backgroundOptions.style.display === '') {
+            backgroundOptions.style.display = 'flex';
+        } else {
+            backgroundOptions.style.display = 'none';
+        }
+    });
+    
+    backgroundOptionElements.forEach(option => {
+        const imageName = option.getAttribute('data-image');
+        if (imageName) {
+            option.style.backgroundImage = `url('/images/${imageName}')`;
+            option.style.backgroundSize = 'cover';
+            option.style.backgroundPosition = 'center';
+        
+            option.addEventListener('click', () => {
+                document.body.style.backgroundImage = `url('/images/${imageName}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                backgroundOptions.style.display = 'none';
+            });
+        }
+    });
     // Load background image from IndexedDB
     const loadBackgroundImage = async () => {
         try {
