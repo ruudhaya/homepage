@@ -15,3 +15,5 @@ Keep all the opened Groups remain open on action completion
 
 Alignment of the Accordion should be left aligned and scrollable with maximum height of the window other than the Footer
 Update css of the confirmation dialog
+Show the action buttons only on hover of the link
+Add mandatory field check for the group, name and link

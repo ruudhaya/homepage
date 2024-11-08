@@ -319,3 +319,8 @@ a:hover {
 .search-result:hover {
     background-color: #f0f0f0;
 }
+
+.search-result-active {
+    background-color: #007bff;
+    color: white;
+}

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchBar = document.getElementById('searchBar');
     const searchResults = document.getElementById('searchResults');
 
+    let currentFocus = -1;
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
@@ -358,11 +359,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const renderSearchResults = (results) => {
         searchResults.innerHTML = '';
+        currentFocus = -1;
         if (results.length > 0) {
             results.forEach(result => {
                 const resultElement = document.createElement('div');
                 resultElement.className = 'search-result';
                 resultElement.textContent = result.name;
+                resultElement.tabIndex = 0; // Make the result focusable
                 resultElement.addEventListener('click', () => {
                     window.open(result.url, '_blank');
                 });
@@ -371,6 +374,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             searchResults.style.display = 'block';
         } else {
             searchResults.style.display = 'none';
+        }
+    };
+
+    // Handle keyboard navigation for search results
+    searchBar.addEventListener('keydown', (e) => {
+        const results = searchResults.getElementsByClassName('search-result');
+        if (e.key === 'ArrowDown') {
+            currentFocus++;
+            addActive(results);
+        } else if (e.key === 'ArrowUp') {
+            currentFocus--;
+            addActive(results);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocus > -1) {
+                if (results[currentFocus]) {
+                    results[currentFocus].click();
+                }
+            }
+        }
+    });
+
+    const addActive = (results) => {
+        if (!results) return false;
+        removeActive(results);
+        if (currentFocus >= results.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = results.length - 1;
+        results[currentFocus].classList.add('search-result-active');
+    };
+
+    const removeActive = (results) => {
+        for (let i = 0; i < results.length; i++) {
+            results[i].classList.remove('search-result-active');
         }
     };
 
