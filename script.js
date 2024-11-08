@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const importFileInput = document.getElementById('importFileInput');
     const notification = document.getElementById('notification');
     const fileInput = document.getElementById('fileInput');
+    const searchIcon = document.getElementById('searchIcon');
+    const searchBar = document.getElementById('searchBar');
+    const searchResults = document.getElementById('searchResults');
+
     let editMode = false;
     let editGroup = '';
     let editIndex = -1;
@@ -297,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Import button clicked');
         importFileInput.click();
     });
-    
+
     importFileInput.addEventListener('change', (e) => {
         console.log('File input change event triggered');
         const file = e.target.files[0];
@@ -322,6 +326,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Reset the value of the file input to ensure the change event triggers again
         importFileInput.value = '';
     });
+
+    searchIcon.addEventListener('click', () => {
+        if (searchBar.style.display === 'none' || searchBar.style.display === '') {
+            searchBar.style.display = 'block';
+            searchBar.focus();
+        } else {
+            searchBar.style.display = 'none';
+        }
+    });
+
+    searchBar.addEventListener('input', () => {
+        const query = searchBar.value.toLowerCase();
+        if (query.length > 1) {
+            const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
+            const results = [];
+            for (const group in groups) {
+                groups[group].forEach(link => {
+                    if (link.name.toLowerCase().includes(query)) {
+                        results.push(link);
+                    }
+                });
+            }
+            renderSearchResults(results.slice(0, 6));
+        } else {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    const renderSearchResults = (results) => {
+        searchResults.innerHTML = '';
+        if (results.length > 0) {
+            results.forEach(result => {
+                const resultElement = document.createElement('div');
+                resultElement.className = 'search-result';
+                resultElement.textContent = result.name;
+                resultElement.addEventListener('click', () => {
+                    window.open(result.url, '_blank');
+                });
+                searchResults.appendChild(resultElement);
+            });
+            searchResults.style.display = 'block';
+        } else {
+            searchResults.style.display = 'none';
+        }
+    };
 
     // Initial load
     loadLinks();

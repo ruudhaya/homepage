@@ -1,0 +1,4 @@
+copilot used to give the entire file in output
+ - Asking it to give only lines to be updated helped
+
+Having duplication of the action listeners might have side effect
