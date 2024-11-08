@@ -3,7 +3,7 @@
 [*] Delete Group - Group should be deleted with a confirmation dialog
 [*] Background image for the Home Page
 [*] Import and Export of the link contents
-[-->] Search links with search bar
+[*] Search links with search bar
 [] Search with double shift key press
 [] Default background images - to show for selection, set them as background
 

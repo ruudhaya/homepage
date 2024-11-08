@@ -333,6 +333,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             searchBar.focus();
         } else {
             searchBar.style.display = 'none';
+            searchBar.value = ''; // Clear the search text
+            searchResults.style.display = 'none'; // Hide the search results
         }
     });
 
@@ -372,6 +374,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    // Close search bar and results on pressing Esc key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchBar.style.display = 'none';
+            searchBar.value = ''; // Clear the search text
+            searchResults.style.display = 'none'; // Hide the search results
+        }
+    });
     // Initial load
     loadLinks();
     loadBackgroundImage();
