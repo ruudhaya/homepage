@@ -11,11 +11,13 @@
 [*] Add Link - Group name should be a dropdown with already available group names, and an option to add a new group
 Edit - On editing the group name, link should be moved from one to another group
 Keep all the opened Groups remain open on action completion
-Add http:// by default if not present in the link
+[*] Add http:// by default if not present in the link
 
-
+Hide the links on the puller from below, in the footer
+Add an animation to the puller
 Alignment of the Accordion should be left aligned and scrollable with maximum height of the window other than the Footer
 Update css of the confirmation dialog
-Show the action buttons only on hover of the link
-Add mandatory field check for the group, name and link
+Update the css of the creation popup
+[*] Show the action buttons only on hover of the link
+[*] Add mandatory field check for the group, name and link
 [*] edit link is not working fine - Edit group name disabled
