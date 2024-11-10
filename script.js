@@ -153,7 +153,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     linkForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const groupName = groupNameSelect.value === 'addNewGroup' ? newGroupNameInput.value : groupNameSelect.value;
-        saveLink(groupName, linkName.value, linkURL.value);
+        let url = linkURL.value;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'http://' + url;
+        }
+        if (!isValidURL(url)) {
+            linkURL.setCustomValidity('Please enter a valid URL.');
+            linkURL.reportValidity();
+            return;
+        }
+        linkURL.setCustomValidity(''); // Clear any previous custom validation messages    
+        saveLink(groupName, linkName.value, url);
         groupNameSelect.value = '';
         newGroupNameInput.value = '';
         newGroupNameInput.style.display = 'none';
@@ -166,6 +176,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         openGroup = groupName;
     });
 
+    // Function to validate URL
+    const isValidURL = (string) => {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    };
     // Save a new link to localStorage
     const saveLink = (group, name, url) => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
