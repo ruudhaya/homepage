@@ -194,12 +194,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     openPopupButton.addEventListener('click', () => {
         popup.style.display = 'flex';
         submitBtn.value = 'Add Link'; // Set button text for adding
+        groupNameSelect.disabled = false; // Enable group name selection
     });
 
     // Close popup
     closePopupButton.addEventListener('click', () => {
         popup.style.display = 'none';
         submitBtn.value = 'Add Link'; // Reset button text
+        groupNameSelect.disabled = false; // Enable group name selection
     });
 
     // Close popup on Esc key press
@@ -207,6 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.key === 'Escape') {
             popup.style.display = 'none';
             submitBtn.value = 'Add Link'; // Reset button text
+            groupNameSelect.disabled = false; // Enable group name selection
         }
     });
 
@@ -214,7 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const editLink = (group, index) => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
         const link = groups[group][index];
-        groupName.value = link.group;
+        groupNameSelect.value = group;
         linkName.value = link.name;
         linkURL.value = link.url;
         editMode = true;
@@ -222,6 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         editIndex = index;
         popup.style.display = 'flex';
         submitBtn.value = 'Save'; // Change button text to Save
+        groupNameSelect.disabled = true; // Disable group name selection
     };
 
     // Delete link
