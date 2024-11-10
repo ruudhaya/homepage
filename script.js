@@ -3,6 +3,9 @@ import { openDatabase, saveImage, loadImage, deleteImage } from './indexedDB.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
     const linksDiv = document.getElementById('links');
+    const groupNameSelect = document.getElementById('groupNameSelect');
+    const newGroupNameInput = document.getElementById('newGroupName');
+
     const linkForm = document.getElementById('linkForm');
     const groupName = document.getElementById('groupName');
     const linkName = document.getElementById('linkName');
@@ -51,6 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadLinks = () => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
         linksDiv.innerHTML = '';
+        groupNameSelect.innerHTML = '<option value="" disabled selected>Select Group</option><option value="addNewGroup">Add New Group</option>';
         for (const group in groups) {
             if (Array.isArray(groups[group])) {
                 const groupElement = document.createElement('div');
@@ -81,6 +85,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 linksDiv.appendChild(groupElement);
                 
+                // Add group to dropdown
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                groupNameSelect.appendChild(option);
+
                 // Keep the accordion open if it was open before
                 if (group === openGroup) {
                     contentDiv.classList.add('open');
@@ -128,6 +138,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
+    // Handle group name selection
+    groupNameSelect.addEventListener('change', () => {
+        if (groupNameSelect.value === 'addNewGroup') {
+            newGroupNameInput.style.display = 'block';
+            newGroupNameInput.required = true;
+        } else {
+            newGroupNameInput.style.display = 'none';
+            newGroupNameInput.required = false;
+        }
+    });
+
+    // Handle form submission
+    linkForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const groupName = groupNameSelect.value === 'addNewGroup' ? newGroupNameInput.value : groupNameSelect.value;
+        saveLink(groupName, linkName.value, linkURL.value);
+        groupNameSelect.value = '';
+        newGroupNameInput.value = '';
+        newGroupNameInput.style.display = 'none';
+        linkName.value = '';
+        linkURL.value = '';
+        popup.style.display = 'none';
+        submitBtn.value = 'Add Link'; // Reset button text
+
+        // Keep the accordion open after save
+        openGroup = groupName;
+    });
+
     // Save a new link to localStorage
     const saveLink = (group, name, url) => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
@@ -145,20 +183,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('favoriteLinks', JSON.stringify(groups));
         loadLinks();
     };
-
-    // Handle form submission
-    linkForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        saveLink(groupName.value, linkName.value, linkURL.value);
-        groupName.value = '';
-        linkName.value = '';
-        linkURL.value = '';
-        popup.style.display = 'none';
-        submitBtn.value = 'Add Link'; // Reset button text
-
-        // Keep the accordion open after save
-        openGroup = groupName.value;
-    });
 
     // Load sample data on button click
     loadSampleButton.addEventListener('click', () => {
@@ -190,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const editLink = (group, index) => {
         const groups = JSON.parse(localStorage.getItem('favoriteLinks')) || {};
         const link = groups[group][index];
-        groupName.value = group;
+        groupName.value = link.group;
         linkName.value = link.name;
         linkURL.value = link.url;
         editMode = true;

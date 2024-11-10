@@ -28,7 +28,11 @@
         <div class="popup-content">
             <button class="close-popup" id="closePopup">&times;</button>
             <form id="linkForm">
-                <input type="text" id="groupName" placeholder="Group Name" required>
+                <select id="groupNameSelect" required>
+                    <option value="" disabled selected>Select Group</option>
+                    <option value="addNewGroup">Add New Group</option>
+                </select>
+                <input type="text" id="newGroupName" placeholder="New Group Name" style="display: none;">
                 <input type="text" id="linkName" placeholder="Link Name" required>
                 <input type="url" id="linkURL" placeholder="Link URL" required>
                 <input type="submit" id="submitBtn" value="Add Link">

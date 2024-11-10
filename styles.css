@@ -155,6 +155,10 @@ a:hover {
     display: flex;
     gap: 10px;
 }
+.link:hover .link-buttons {
+    display: flex;
+    gap: 10px;
+}
 .link-buttons button {
     padding: 5px;
     font-size: 14px;
